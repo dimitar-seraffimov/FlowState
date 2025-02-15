@@ -1,10 +1,12 @@
 from fastapi import FastAPI
-from routers import session
 from fastapi.responses import HTMLResponse
 from fastapi.requests import Request
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 import os
+
+from routers import session
+
 app = FastAPI()
 
 # creates the static path
