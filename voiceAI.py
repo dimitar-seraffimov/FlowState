@@ -1,4 +1,21 @@
 from elevenlabs_setup import ElevenLabsAPI
+import pygame
+import time
+
+def play_mp3(file_path):
+    """Play an MP3 file once using pygame."""
+    pygame.init()
+    pygame.mixer.init()
+    try:
+        pygame.mixer.music.load(file_path)
+        pygame.mixer.music.play()
+        # Wait until the music finishes playing
+        while pygame.mixer.music.get_busy():
+            time.sleep(0.1)
+    except Exception as e:
+        print(f"Error playing file: {e}")
+    finally:
+        pygame.mixer.quit()
 
 def generate_focus_reminder(
     
@@ -41,6 +58,9 @@ if __name__ == "__main__":
        #     current_intention = "Working on the hackathon project"
             message = "test message"
         )
-        print("\nSuccess! Check focus_reminder.mp3 in your current directory")
+        play_mp3("focus_reminder.mp3")       
     except Exception as e:
         print(f"Error: {e}")
+
+        
+    
