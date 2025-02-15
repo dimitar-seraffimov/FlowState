@@ -1,9 +1,14 @@
+## Core dependencies
+# pip3 install playwright
+# playwright install chromium
+
 from playwright.sync_api import sync_playwright
 import time
 import json
 from urllib.parse import urlparse
 
-def get_tabs_info():
+def get_basic_tab_info():
+    """Collect basic information about open tabs"""
     with sync_playwright() as p:
         try:
             print("Connecting to Chrome...")
@@ -17,104 +22,109 @@ def get_tabs_info():
                     url = page.url
                     parsed_url = urlparse(url)
                     
-                    # Get tab information
+                    # Only collect essential info
                     tab_info = {
-                        # Basic info
                         "title": page.title(),
                         "url": url,
                         "domain": parsed_url.netloc,
-                        "path": parsed_url.path,
-                        "timestamp": time.time(),
-                        
-                        # Page state
-                        "is_loading": page.evaluate("document.readyState !== 'complete'"),
-                        
-                        # Meta information
-                        "meta_description": page.evaluate("document.querySelector('meta[name=\"description\"]')?.content || ''"),
-                        "meta_keywords": page.evaluate("document.querySelector('meta[name=\"keywords\"]')?.content || ''"),
-                        
-                        # Content analysis
-                        "word_count": page.evaluate("""
-                            document.body.innerText
-                            .split(/\s+/)
-                            .filter(word => word.length > 0)
-                            .length
-                        """),
-                        
-                        # Link analysis
-                        "num_links": page.evaluate("document.links.length"),
-                        
-                        # Time data
-                        "time_opened": time.time(),
-                        
-                        # Tab behavior
-                        "has_form": page.evaluate("document.forms.length > 0"),
-                        "has_video": page.evaluate("""
-                            document.getElementsByTagName('video').length > 0 || 
-                            document.getElementsByTagName('iframe').length > 0
-                        """),
-                        
-                        # Page category hints
-                        "is_social_media": any(social in url.lower() 
-                                             for social in ['facebook', 'twitter', 'linkedin', 'instagram']),
-                        "is_email": any(email in url.lower() 
-                                      for email in ['mail.google', 'outlook', 'yahoo.com/mail']),
-                        "is_docs": any(docs in url.lower() 
-                                     for docs in ['docs.google', 'notion.', 'confluence']),
-                        
-                        # Interaction potential
-                        "is_interactive": page.evaluate("""
-                            document.querySelectorAll('button, input, textarea, select').length > 0
-                        """)
+                        "timestamp": time.time()
                     }
                     
-                    # Get h1 content for better context
-                    tab_info["main_heading"] = page.evaluate("""
-                        document.querySelector('h1')?.innerText || 
-                        document.querySelector('h2')?.innerText || 
-                        ''
-                    """)
-                    
                     tabs_info.append(tab_info)
-                    print(f"Successfully collected info for: {tab_info['title']}")
+                    print(f"Collected basic info for: {tab_info['title']}")
                     
                 except Exception as e:
-                    print(f"Error collecting tab info: {e}")
+                    print(f"Error collecting basic tab info: {e}")
             
-            return tabs_info 
+            return tabs_info
             
         except Exception as e:
             print(f"Connection error: {e}")
             return []
 
+def analyze_tab_content(page):
+    """Detailed content analysis of a single tab"""
+    return {
+        "meta_description": page.evaluate("document.querySelector('meta[name=\"description\"]')?.content || ''"),
+        "meta_keywords": page.evaluate("document.querySelector('meta[name=\"keywords\"]')?.content || ''"),
+        "word_count": page.evaluate("""
+            document.body.innerText
+            .split(/\s+/)
+            .filter(word => word.length > 0)
+            .length
+        """),
+        "num_links": page.evaluate("document.links.length"),
+        "main_heading": page.evaluate("""
+            document.querySelector('h1')?.innerText || 
+            document.querySelector('h2')?.innerText || 
+            ''
+        """)
+    }
+
+def analyze_tab_behavior(page):
+    """Analyze interactive elements and behavior indicators"""
+    return {
+        "has_form": page.evaluate("document.forms.length > 0"),
+        "has_video": page.evaluate("""
+            document.getElementsByTagName('video').length > 0 || 
+            document.getElementsByTagName('iframe').length > 0
+        """),
+        "is_interactive": page.evaluate("""
+            document.querySelectorAll('button, input, textarea, select').length > 0
+        """)
+    }
+
+def categorize_tab(url):
+    """Categorize tab based on URL patterns"""
+    url_lower = url.lower()
+    return {
+        "is_social_media": any(social in url_lower 
+                             for social in ['facebook', 'twitter', 'linkedin', 'instagram']),
+        "is_email": any(email in url_lower 
+                      for email in ['mail.google', 'outlook', 'yahoo.com/mail']),
+        "is_docs": any(docs in url_lower 
+                     for docs in ['docs.google', 'notion.', 'confluence']),
+        "is_chat": any(chat in url_lower
+                      for chat in ['slack.com', 'discord.com', 'teams.microsoft']),
+        "is_dev": any(dev in url_lower
+                     for dev in ['github.com', 'stackoverflow.com', 'gitlab.com'])
+    }
+
 def analyze_tab_patterns(tabs):
-    """Analyze patterns in the collected tab data"""
+    """Analyze patterns across all tabs"""
     patterns = {
         "total_tabs": len(tabs),
-        "categories": {
-            "social_media": len([tab for tab in tabs if tab["is_social_media"]]),
-            "email": len([tab for tab in tabs if tab["is_email"]]),
-            "docs": len([tab for tab in tabs if tab["is_docs"]]),
-        },
-        "interaction_heavy": len([tab for tab in tabs if tab["is_interactive"]]),
-        "content_heavy": len([tab for tab in tabs if tab["word_count"] > 500]),
-        "video_content": len([tab for tab in tabs if tab["has_video"]]),
-        "domains": list(set(tab["domain"] for tab in tabs))
+        "domains": list(set(tab["domain"] for tab in tabs)),
+        "domain_count": {},
+        "timestamp_range": {
+            "oldest": min(tab["timestamp"] for tab in tabs),
+            "newest": max(tab["timestamp"] for tab in tabs)
+        }
     }
+    
+    # Count domains
+    for tab in tabs:
+        domain = tab["domain"]
+        patterns["domain_count"][domain] = patterns["domain_count"].get(domain, 0) + 1
+    
     return patterns
 
 if __name__ == "__main__":
-    # while True:
+    while True:
         print("\n--- Checking tabs ---")
-        tabs = get_tabs_info()
+        tabs = get_basic_tab_info()
+        
         if tabs:
-            # Analyze patterns
+            # Basic pattern analysis
             patterns = analyze_tab_patterns(tabs)
-            
-            print("\nTab Patterns:")
+            print("\nBasic Tab Patterns:")
             print(json.dumps(patterns, indent=2))
             
-            print("\nDetailed Tab Info:")
+            ## Optional: Get categories for each tab
+            #for tab in tabs:
+            #    tab["categories"] = categorize_tab(tab["url"])
+            
+            print("\nTabs without categories:")
             print(json.dumps(tabs, indent=2))
             
-        # time.sleep(5)  # Wait 5 seconds before next check
+        time.sleep(5)
