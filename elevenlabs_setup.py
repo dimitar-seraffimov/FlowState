@@ -5,7 +5,7 @@ from typing import Optional, Dict, Any
 
 class ElevenLabsAPI:
     def __init__(self):
-        self.api_key = ""
+        self.api_key = "sk_c6913cc2bd5161badfda6eb01d77587353528f801e0de63b"
         self.voice_id ="6O8E1UOlJbvkhJDpV0aB"
         self.base_url = "https://api.elevenlabs.io/v1"
         self.headers = {
