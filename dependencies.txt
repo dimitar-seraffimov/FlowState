@@ -1,6 +1,7 @@
 Core dependencies:
 pip3 install playwright
 playwright install chromium
+pip3 install elevenlabs
 
 
 mac terminal: 
