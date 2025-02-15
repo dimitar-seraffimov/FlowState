@@ -1,11 +1,14 @@
 ## Core dependencies
 # pip3 install playwright
 # playwright install chromium
+# /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --remote-debugging-port=9222 --user-data-dir="/tmp/chrome_debug_profile"
 
 from playwright.sync_api import sync_playwright
 import time
 import json
 from urllib.parse import urlparse
+
+
 
 def get_basic_tab_info():
     """Collect basic information about open tabs"""
