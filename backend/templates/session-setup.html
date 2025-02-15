@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Flow Session Setup</title>
+  <link rel="stylesheet" href="../../static/css/session-setup.css" />
+  <script src="../../static/js/session-setup.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+  <div class="container">
+    <button id="back-btn" class="btn secondary" onclick="navigateToHome()">Back to home</button>
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title">Set Up Your Flow Session</h2>
+        <p class="card-description">Configure your focus environment with FastAPI integration.</p>
+      </div>
+      <div class="card-content">
+        <form id="session-form">
+          <div id="step-1" class="step active">
+            <label for="goal" class="label">What's your main goal for this session?</label>
+            <input type="text" id="goal" class="input" required placeholder="e.g., Complete the project proposal" />
+
+            <label for="description" class="label">Additional notes (optional)</label>
+            <input type="text" id="description" class="input" placeholder="Any specific details or requirements" />
+
+            <button type="button" id="continue-btn" class="btn primary">Continue</button>
+          </div>
+
+          <div id="step-2" class="step">
+            <label for="max-tasks" class="label">Maximum concurrent tasks</label>
+            <input type="range" id="max-tasks" class="slider" min="1" max="10" value="3" />
+
+            <div class="switch-group">
+              <label for="voice-alerts" class="label">Enable Voice Alerts</label>
+              <input type="checkbox" id="voice-alerts" class="switch" checked />
+            </div>
+
+            <div class="switch-group">
+              <label for="notifications" class="label">Enable Browser Notifications</label>
+              <input type="checkbox" id="notifications" class="switch" checked />
+            </div>
+
+            <button type="submit" class="btn primary">Start Session</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <script>
+    function navigateToHome() {
+      window.location.href = "/";
+    }
+  </script>
+</body>
+</html>
