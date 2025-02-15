@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FlowState - AI Focus Management</title>
+  <link rel="stylesheet" href="../../static/css/styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="../../static/js/scripts.js"></script>
+</head>
+<body>
+  <div class="container">
+    <div id="home-screen" class="screen active">
+      <div class="header">
+        <h1>Stay in Your Flow State</h1>
+        <p>AI-powered focus management with Python FastAPI backend.</p>
+      </div>
+      <button id="get-started-btn" class="btn primary">Get Started</button>
+    </div>
+
+    <div id="session-setup" class="screen">
+      <button id="back-btn" class="btn secondary">&larr; Back</button>
+      <h2>Set Up Your Flow Session</h2>
+      <form id="session-form">
+        <label for="goal">Main Goal:</label>
+        <input type="text" id="goal" name="goal" required placeholder="e.g., Complete the project proposal" />
+
+        <label for="description">Additional Notes:</label>
+        <textarea id="description" name="description" placeholder="Any specific details or requirements"></textarea>
+
+        <label for="max-tasks">Maximum Concurrent Tasks:</label>
+        <input type="number" id="max-tasks" name="max-tasks" min="1" max="10" value="3" />
+
+        <label for="voice-alerts">Enable Voice Alerts:</label>
+        <input type="checkbox" id="voice-alerts" name="voice-alerts" checked />
+
+        <label for="notifications">Enable Browser Notifications:</label>
+        <input type="checkbox" id="notifications" name="notifications" checked />
+
+        <button type="submit" class="btn primary">Start Session</button>
+      </form>
+    </div>
+  </div>
+
+</body>
+</html>
