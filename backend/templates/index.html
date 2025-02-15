@@ -15,7 +15,9 @@
         <h1>Stay in Your Flow State</h1>
         <p>AI-powered focus management with Python FastAPI backend.</p>
       </div>
-      <button id="get-started-btn" class="btn primary">Get Started</button>
+      <div class="button-container">
+        <button id="get-started-btn" class="btn primary" onclick="navigateToSessionSetup()">Get Started</button>
+      </div>
     </div>
 
     <div id="session-setup" class="screen">
@@ -37,10 +39,15 @@
         <label for="notifications">Enable Browser Notifications:</label>
         <input type="checkbox" id="notifications" name="notifications" checked />
 
-        <button type="submit" class="btn primary">Start Session</button>
+        <button type="button" class="btn primary" onclick="navigateToSessionSetup()">Start Session</button>
       </form>
     </div>
   </div>
 
+  <script>
+    function navigateToSessionSetup() {
+      window.location.href = "/session-setup";
+    }
+  </script>
 </body>
 </html>
