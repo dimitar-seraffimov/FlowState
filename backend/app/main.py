@@ -27,6 +27,9 @@ async def read_index(request: Request):
 async def read_session_setup(request: Request):
     return templates.TemplateResponse("session-setup.html", {"request": request})
 
+@app.get("/session-started", response_class=HTMLResponse)
+async def read_session_started(request: Request):
+    return templates.TemplateResponse("session-started.html", {"request": request})
 
 
 @router.post("/create-session-goal")

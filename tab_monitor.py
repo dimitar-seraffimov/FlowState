@@ -130,4 +130,4 @@ if __name__ == "__main__":
             print("\nTabs without categories:")
             print(json.dumps(tabs, indent=2))
 
-        time.sleep(5)
+        time.sleep(5)   
